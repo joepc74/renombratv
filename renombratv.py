@@ -48,9 +48,12 @@ def recorre_carpeta(ruta_carpeta):
                     logging.info(f"Episodio encontrado: {episodio.get('name', 'Unknown Episode')}")
                     titulo=episodio.get('name', 'Unknown Episode')
                     nuevo_nombre = f"{info.get('title', 'Unknown Title')} - {info.get('season', 0):02d}x{info.get('episode', 0):02d} - {titulo}.{file.split('.')[-1]}"
-                    nueva_ruta = os.path.join(carpeta_destino, nuevo_nombre)
-                    os.rename(ruta_completa, nueva_ruta)
-                    print(f"Renombrado: '{file}' a '{nueva_ruta}'")
+                    nueva_ruta=os.path.join(carpeta_destino,info.get('title', 'Unknown Title'))
+                    if not os.path.exists(nueva_ruta):
+                        os.makedirs(nueva_ruta)
+                    nueva_ruta_archivo = os.path.join(nueva_ruta, nuevo_nombre)
+                    os.rename(ruta_completa, nueva_ruta_archivo)
+                    print(f"Renombrado: '{file}' a '{nueva_ruta_archivo}'")
                 # except Exception as e:
                 #     print(f"Error al procesar '{file}': {e}")
 
