@@ -16,7 +16,7 @@ def elige_serie(opciones,archivo):
         obj['name']
         for obj in opciones
         ]
-    option, index = pick(options=options, title="Elige la serie correcta:")
+    option, index = pick(options=options, title=f"Elige la serie correcta para {archivo}:")
     # print(option, index)
     return opciones[index]['id']
 
