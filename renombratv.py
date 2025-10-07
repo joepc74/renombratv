@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#! /root/.venv/bin/python3
 
 import guessit, logging, sys, os
 import configparser
@@ -57,9 +57,21 @@ def recorre_carpeta(ruta_carpeta):
                 # except Exception as e:
                 #     print(f"Error al procesar '{file}': {e}")
 
-if __name__ == "__main__":
+def cargar_configuracion():
+    ruta = os.path.abspath(__file__)
+
+    # Comprobar si es un enlace simbólico
+    if os.path.islink(ruta):
+        logging.info("El script se está ejecutando desde un enlace simbólico.")
+        ruta=os.path.realpath(ruta)
+
+    logging.info(f"Cargando configuración desde: {os.path.join(os.path.dirname(ruta),'renombratv.ini')}")
     config = configparser.ConfigParser()
-    config.read(os.path.join(os.path.dirname(__file__),'renombratv.ini'))
+    config.read(os.path.join(os.path.dirname(ruta),'renombratv.ini'))
+    return config
+
+if __name__ == "__main__":
+    config=cargar_configuracion()
     tmdb.API_KEY=config.get('General', 'tmdbapikey')
     carpeta_destino=config.get('General', 'carpeta_destino')
     recorre_carpeta('.')
