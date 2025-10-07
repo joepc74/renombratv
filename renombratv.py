@@ -11,7 +11,7 @@ if '--log' in sys.argv:
 elif '--debug' in sys.argv:
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def elige_serie(opciones):
+def elige_serie(opciones,archivo):
     options=[
         obj['name']
         for obj in opciones
@@ -38,7 +38,7 @@ def recorre_carpeta(ruta_carpeta):
                         continue
                     if len(response['results']) > 1:
                         logging.info(f"Se encontraron múltiples resultados para: {info.get('title')}")
-                        idserie=elige_serie(response['results'])
+                        idserie=elige_serie(response['results'],file)
                     else:
                         logging.info(f"Se encontraron un único resultado para: {info.get('title')}")
                         idserie=search.results[0]['id']
