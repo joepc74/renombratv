@@ -6,6 +6,7 @@ import tmdbsimple as tmdb
 from pick import pick
 
 
+
 if '--log' in sys.argv:
     logging.basicConfig(level=logging.INFO)
 elif '--debug' in sys.argv:
@@ -21,6 +22,7 @@ def elige_serie(opciones,archivo):
     return opciones[index]['id']
 
 def recorre_carpeta(ruta_carpeta):
+    renombrados=[]
     # recorre la carpeta buscardo archivos de series y los renombra
     for root, dirs, files in os.walk(ruta_carpeta):
         for file in files:
@@ -49,13 +51,11 @@ def recorre_carpeta(ruta_carpeta):
                     titulo=episodio.get('name', 'Unknown Episode')
                     nuevo_nombre = f"{info.get('title', 'Unknown Title')} - {info.get('season', 0):02d}x{info.get('episode', 0):02d} - {titulo}.{file.split('.')[-1]}"
                     nueva_ruta=os.path.join(carpeta_destino,info.get('title', 'Unknown Title'))
-                    if not os.path.exists(nueva_ruta):
-                        os.makedirs(nueva_ruta)
                     nueva_ruta_archivo = os.path.join(nueva_ruta, nuevo_nombre)
-                    os.rename(ruta_completa, nueva_ruta_archivo)
-                    print(f"Renombrado: '{file}' a '{nueva_ruta_archivo}'")
+                    renombrados.append({'file':file, 'ruta_completa':ruta_completa, 'nueva_ruta':nueva_ruta, 'nueva_ruta_archivo':nueva_ruta_archivo})
                 # except Exception as e:
                 #     print(f"Error al procesar '{file}': {e}")
+    return renombrados
 
 def cargar_configuracion():
     ruta = os.path.abspath(__file__)
@@ -69,9 +69,21 @@ def cargar_configuracion():
     config = configparser.ConfigParser()
     config.read(os.path.join(os.path.dirname(ruta),'renombratv.ini'))
     return config
+def renombra(renombrados):
+    print("Archivos a renombrar:")
+    for item in renombrados:
+        print(f"{item['file']} -> {item['nueva_ruta_archivo']}")
+    confirmacion = input("¿Deseas proceder con el renombrado? (s/n): ")
+    if confirmacion.lower() == 's':
+        for item in renombrados:
+            os.makedirs(item['nueva_ruta'], exist_ok=True)
+            os.rename(item['ruta_completa'], item['nueva_ruta_archivo'])
+            logging.info(f"Renombrado: {item['file']} -> {item['nueva_ruta_archivo']}")
 
+        print("Renombrado completado.")
 if __name__ == "__main__":
     config=cargar_configuracion()
     tmdb.API_KEY=config.get('General', 'tmdbapikey')
     carpeta_destino=config.get('General', 'carpeta_destino')
-    recorre_carpeta('.')
+    renombrados=recorre_carpeta('.')
+    renombra(renombrados)
