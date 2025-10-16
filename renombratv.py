@@ -17,9 +17,20 @@ def elige_serie(opciones,archivo):
         obj['name']
         for obj in opciones
         ]
-    option, index = pick(options=options, title=f"Elige la serie correcta para {archivo}:")
+    option, index = pick(options=options+['* Introducir serie','* Cancelar'], title=f"Elige la serie correcta para {archivo}:")
     # print(option, index)
-    return opciones[index]['id']
+    if option == '* Cancelar':
+        return None
+    elif option == '* Introducir serie':
+        busqueda = input("Introduce el nombre de la serie: ")
+        search = tmdb.Search()
+        response = search.tv(language='es-ES',query=busqueda)
+        if response['results']==[]:
+            logging.info(f"No se encontraron resultados para: {busqueda}")
+            return None
+        return elige_serie(response['results'],archivo)
+    else:
+        return opciones[index]['id']
 
 def recorre_carpeta(ruta_carpeta):
     renombrados=[]
@@ -41,6 +52,9 @@ def recorre_carpeta(ruta_carpeta):
                     if len(response['results']) > 1:
                         logging.info(f"Se encontraron múltiples resultados para: {info.get('title')}")
                         idserie=elige_serie(response['results'],file)
+                        if idserie is None:
+                            logging.info(f"Operación cancelada para: {file}")
+                            continue
                     else:
                         logging.info(f"Se encontraron un único resultado para: {info.get('title')}")
                         idserie=search.results[0]['id']
