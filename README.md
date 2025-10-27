@@ -22,22 +22,17 @@ Dependencias (tal como aparecen en `requirements.txt`):
 ## Instalación
 
 1. Clona o descarga el repositorio.
-2. Abre PowerShell y navega a la carpeta del proyecto:
-
-```powershell
-cd e:\codigo\renombratv
-```
-
+2. Abre Shell y navega a la carpeta del proyecto:
 3. (Opcional) Crea y activa un entorno virtual:
 
-```powershell
+```
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
 4. Instala las dependencias:
 
-```powershell
+```
 pip install -r requirements.txt
 ```
 
@@ -57,9 +52,9 @@ Las claves del telegram son opcionales, de no existir no se manda el mensaje al 
 
 ## Uso
 
-Ejecuta el script desde PowerShell:
+Ejecuta el script:
 
-```powershell
+```
 python renombratv.py
 ```
 
