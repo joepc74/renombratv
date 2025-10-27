@@ -85,8 +85,10 @@ def cargar_configuracion():
     return config
 def renombra(renombrados):
     print("Archivos a renombrar:")
+    cadena_renombrados=""
     for item in renombrados:
-        print(f"{item['file']} -> {item['nueva_ruta_archivo']}")
+        cadena_renombrados+=f"{item['file']} -> {item['nueva_ruta_archivo']}\r\n"
+    print(cadena_renombrados)
     confirmacion = input("¿Deseas proceder con el renombrado? (s/n): ")
     if confirmacion.lower() == 's':
         for item in renombrados:
@@ -95,6 +97,21 @@ def renombra(renombrados):
             logging.info(f"Renombrado: {item['file']} -> {item['nueva_ruta_archivo']}")
 
         print("Renombrado completado.")
+        try:
+            telegramchat=tmdb.API_KEY=config.get('General', 'telegramchat')
+            telegramkey=tmdb.API_KEY=config.get('General', 'telegramkey')
+            if telegramchat!=None and telegramkey!=None:
+                import requests
+                mensaje=f"Renombrado completado:\r\n{cadena_renombrados}"
+                url=f"https://api.telegram.org/bot{telegramkey}/sendMessage"
+                data={
+                    'chat_id': telegramchat,
+                    'text': mensaje
+                }
+                requests.post(url, data=data)
+        except Exception as e:
+            logging.error(f"Error al enviar notificación por Telegram: {e}")
+            pass
 if __name__ == "__main__":
     config=cargar_configuracion()
     tmdb.API_KEY=config.get('General', 'tmdbapikey')

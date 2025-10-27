@@ -49,7 +49,11 @@ Crea un archivo `renombratv.ini` usando esta plantilla:
 [General]
 tmdbapikey = [KEY_API_TMDB]
 carpeta_destino=[RUTA_DESTINO_DE_LOS_ARCHIVOS_RENOMBRADOS]
+telegramkey=[KEY_API_TELEGRAM]
+telegramchat=[ID_DEL_CHAT_AL_QUE_ENVIAR_MENSAJE_AL_FINALIZAR]
 ```
+
+Las claves del telegram son opcionales, de no existir no se manda el mensaje al finalizar.
 
 ## Uso
 
