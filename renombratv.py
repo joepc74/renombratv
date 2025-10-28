@@ -63,7 +63,7 @@ def recorre_carpeta(ruta_carpeta):
                     episodio=detalles.get('episodes', [])[info.get('episode', 1)-1]
                     logging.info(f"Episodio encontrado: {episodio.get('name', 'Unknown Episode')}")
                     titulo=episodio.get('name', 'Unknown Episode')
-                    nuevo_nombre = f"{info.get('title', 'Unknown Title')} - {info.get('season', 0):02d}x{info.get('episode', 0):02d} - {titulo}.{file.split('.')[-1]}"
+                    nuevo_nombre = f"{info.get('title', 'Unknown Title')} - {info.get('season', 0)}x{info.get('episode', 0):02d} - {titulo}.{file.split('.')[-1]}"
                     nueva_ruta=os.path.join(carpeta_destino,info.get('title', 'Unknown Title'))
                     nueva_ruta_archivo = os.path.join(nueva_ruta, nuevo_nombre)
                     renombrados.append({'file':file, 'ruta_completa':ruta_completa, 'nueva_ruta':nueva_ruta, 'nueva_ruta_archivo':nueva_ruta_archivo})
